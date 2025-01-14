@@ -7,7 +7,7 @@ import os
 app = Flask(__name__)
 
 # Paths for the dataset and folders for plots
-DATA_PATH = "C:\\Users\\S Ajay\\OneDrive\\Desktop\\ajay2\\supermart grocery sales-retail analytics\\Supermart Grocery Sales.csv"
+DATA_PATH = "C://Users//bella//OneDrive//Dokumen//Supermart Grocery Sales - Retail Analytics Dataset.csv"
 app.config['PLOT_FOLDER'] = 'static/plots/'
 os.makedirs(app.config['PLOT_FOLDER'], exist_ok=True)
 
@@ -22,9 +22,11 @@ df['Year'] = df['Order Date'].dt.year
 def create_bar_plot(data, title):
     if data.empty:
         raise ValueError("No data available for the selected categories.")
+
     plot_file = os.path.join(app.config['PLOT_FOLDER'], 'bar_plot.png')
     if os.path.exists(plot_file):
         os.remove(plot_file)
+
     plt.figure(figsize=(12, 6))
     sales_data = data.groupby('Category')['Sales'].sum().reset_index()
     sns.barplot(data=sales_data, x='Category', y='Sales', palette='viridis', edgecolor='black')
@@ -40,9 +42,11 @@ def create_bar_plot(data, title):
 def create_pie_chart(data, title):
     if data.empty:
         raise ValueError("No data available for the selected categories.")
+
     plot_file = os.path.join(app.config['PLOT_FOLDER'], 'pie_chart.png')
     if os.path.exists(plot_file):
         os.remove(plot_file)
+
     plt.figure(figsize=(8, 8))
     sales_data = data.groupby('Category')['Sales'].sum()
     plt.pie(sales_data, labels=sales_data.index, autopct='%1.1f%%', startangle=90)
@@ -52,7 +56,7 @@ def create_pie_chart(data, title):
     plt.close()
     return plot_file
 
-# Route for the Data Visualization page (home)
+# Route for the main page
 @app.route('/', methods=['GET'])
 def index():
     months = df['Month'].unique()
@@ -60,11 +64,6 @@ def index():
     states = df['State'].unique()
     cities = df['City'].unique()
     return render_template('index.html', months=months, years=years, states=states, cities=cities)
-
-# Route for about section inside the dashboard
-@app.route('/about', methods=['GET'])
-def about():
-    return render_template('about.html')
 
 # Route for month view
 @app.route('/month_view', methods=['POST'])
